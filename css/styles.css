@@ -1,0 +1,60 @@
+body{
+	background-color: #000;
+	margin: 0;
+	padding: 0 0 0 0;
+	overflow: hidden;
+}
+#container{
+	position: absolute;
+	z-index: 0;
+}
+
+#background{
+	position: absolute;
+	background-color: #000;
+	width:100%;
+	height:100%;
+	z-index:0;
+}
+
+video{
+	position: absolute;
+	border:1px solid white;
+	bottom: 0;
+	display: none;
+	visibility: hidden;
+}
+
+#login {
+	background-image: url('/img/login_bg.jpg');
+	width: 1280px;
+	height: 800px;
+}
+
+#lobby {
+	background-image: url('/img/lobby_bg.jpg');
+	width: 1280px;
+	height: 800px;
+}
+
+#facebookLogin {
+	position: absolute;
+	cursor: hand;
+	background-image: url('/img/login_btn.jpg');
+	border: 0px;
+	width: 140px;
+	height: 36px;
+	left: 1030px;
+	top: 470px;
+}
+
+#enterCryptum {
+	position: absolute;
+	cursor: hand;
+	background-image: url('/img/enter_btn.jpg');
+	border: 0px;
+	width: 180px;
+	height: 36px;
+	left: 1022px;
+	top: 470px;
+}
