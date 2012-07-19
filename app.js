@@ -225,6 +225,12 @@ function WormTvApplication( ) {
 function WormTvModel( ) {
 
 	//-----------------------------------------------------------------------------------------------
+	// private static constants
+	//-----------------------------------------------------------------------------------------------
+	
+	this.DEFAULT_VIDEO_ID = 'oHg5SJYRHA0';
+
+	//-----------------------------------------------------------------------------------------------
 	// private properties
 	//-----------------------------------------------------------------------------------------------
 	
@@ -325,7 +331,11 @@ function WormTvModel( ) {
 		
 		console.log( 'WormTvModel.getNextVideo( )' );
 		
-		return this._videos.pop( );
+		if ( this._videos.length > 0 ) {
+			return this._videos.pop( );
+		} else {
+			return this.DEFAULT_VIDEO_ID;
+		}
 		
 	};
 
