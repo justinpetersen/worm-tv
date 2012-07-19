@@ -86,7 +86,7 @@ function WormTvClient( ) {
 		console.log( 'WormTvClient.addVideo( )' );
 		
 		var videoId = $( '#videoId' ).val( );
-		console.log( 'videoId: ' + videoId );
+		$( '#videoId').val( '' );
 		
 		this._socket.emit( 'addVideo', videoId );
 		
