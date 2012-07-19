@@ -199,7 +199,7 @@ function WormTvApplication( ) {
 	
 }
 
-function WormTvApplicationModel( ) {
+function WormTvModel( ) {
 
 	//-----------------------------------------------------------------------------------------------
 	// private properties
@@ -225,7 +225,7 @@ function WormTvApplicationModel( ) {
 	// create a new user and add the new user to the lobby
 	this.addUser = function( clientId ) {
 
-		console.log( 'WormTvApplicationModel.addUser( ' + clientId + ' )' );
+		console.log( 'WormTvModel.addUser( ' + clientId + ' )' );
 		
 		// create a new user and store his client ID
 		var user = new WormTvUser( );
@@ -257,7 +257,7 @@ function WormTvApplicationModel( ) {
 	// returns an array of all user names
 	this.getUsersNames = function( ) {
 		
-		console.log( 'WormTvApplicationModel.getUsersNames( ' + omitCurrentUserName +' )' );
+		console.log( 'WormTvModel.getUsersNames( ' + omitCurrentUserName +' )' );
 
 		var usersNames = [ ];
 
