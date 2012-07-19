@@ -146,6 +146,8 @@ function WormTvClient( ) {
 	this.onPlayerReady = function( ) {
 
 		console.log( 'WormTvClient.onPlayerReady( )' );
+		
+		event.target.playVideo( );
 
 	};
 
