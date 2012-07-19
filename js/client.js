@@ -24,6 +24,25 @@ function WormTvClient( ) {
 		
 		this.connect( );
 		
+		this.initYouTubePlayer( );
+		
+	};
+	
+	this.initYouTubePlayer = function( ) {
+		
+		var player;
+		function onYouTubePlayerAPIReady() {
+		  player = new YT.Player('player', {
+		    height: '390',
+		    width: '640',
+		    videoId: 'u1zgFlCw8Aw',
+		    events: {
+		      'onReady': this.onPlayerReady,
+		      'onStateChange': this.onPlayerStateChange
+		    }
+		  });
+		}
+		
 	};
 	
 	this.facebookLogin = function( ) {
@@ -112,11 +131,23 @@ function WormTvClient( ) {
 	// called whenever a new user enters the lobby or the cryptum
 	this.onStatusHandler = function( data ) {
 		
-		console.log('WormTvClient.onStatusHandler( )' );
+		console.log( 'WormTvClient.onStatusHandler( )' );
 		console.log( 'usersNames: ' + data.usersNames );
 		
 		this.setState( data );
 		
+	};
+
+	this.onPlayerReady = function( ) {
+
+		console.log( 'WormTvClient.onPlayerReady( )' );
+
+	};
+
+	this.onPlayerStateChange = function( ) {
+
+		console.log( 'WormTvClient.onPlayerStateChange( )' );
+
 	};
 	
 	//-----------------------------------------------------------------------------------------------
