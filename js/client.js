@@ -80,6 +80,17 @@ function WormTvClient( ) {
 		this._socket.emit( 'clearAllUsers', this._model.getData( ) );
 
 	};
+	
+	this.addVideo = function( ) {
+
+		console.log( 'WormTvClient.addVideo( )' );
+		
+		var videoId = $( '#videoId' ).val( );
+		console.log( 'videoId: ' + videoId );
+		
+		this._socket.emit( 'addVideo', videoId );
+		
+	};
 
 	//-----------------------------------------------------------------------------------------------
 	// private callback handlers
@@ -125,15 +136,24 @@ function WormTvClient( ) {
 		this._model.setClientId( data.clientId );
 
 	};
-	
-	// called whenever a new user enters the lobby or the cryptum
+
+	// called whenever a new user enters the lobby
 	this.onStatusHandler = function( data ) {
-		
+
 		console.log( 'WormTvClient.onStatusHandler( )' );
 		console.log( 'usersNames: ' + data.usersNames );
-		
+
 		this.setState( data );
-		
+
+	};
+
+	// called whenever a new video is ready
+	this.onGetNextVideoHandler = function( videoId ) {
+
+		console.log( 'WormTvClient.onGetNextVideoHandler( ' + videoId + ' )' );
+
+		this._player.loadVideoById( videoId );
+
 	};
 	
 	// This function creates an <iframe> (and YouTube player) after the API code downloads.
@@ -161,7 +181,7 @@ function WormTvClient( ) {
 			
 			case YT.PlayerState.ENDED:
 				console.log( 'complete' );
-				this._player.loadVideoById( '8UVNT4wvIGY' );
+				this._socket.emit( 'getNextVideo' );
 				break;
 			
 		}
@@ -197,6 +217,8 @@ function WormTvClient( ) {
 		
 		// onStatus will be called whenever a new user enters the lobby or the cryptum
 		this._socket.on( 'onStatus', $.proxy( this.onStatusHandler, this ) );
+		
+		this._socket.on( 'onGetNextVideo', $.proxy( this.onGetNextVideoHandler, this ) );
 
 	};
 	

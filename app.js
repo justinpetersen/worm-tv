@@ -118,6 +118,22 @@ function WormTvApplication( ) {
 
 	};
 
+	this.onAddVideo = function( videoId ) {
+
+		console.log( 'WormTvApplication.onAddVideo( )' );
+
+		// add video
+		this._model.addVideo( videoId );
+
+	};
+
+	this.onGetNextVideo = function( ) {
+
+		// notify all users that a new user has entered the cryptum
+		this._io.sockets.emit( 'onGetNextVideo', this._model.getNextVideo( ) );
+
+	};
+
 	//-----------------------------------------------------------------------------------------------
 	// private methods
 	//-----------------------------------------------------------------------------------------------
@@ -196,6 +212,12 @@ function WormTvApplication( ) {
 		// onClearAllUsers will be called to clear all users
 		socket.on( 'clearAllUsers', $.proxy( this.onClearAllUsers, this ) );
 
+		// onAddVideo will be called to add a video
+		socket.on( 'addVideo', $.proxy( this.onAddVideo, this ) );
+
+		// onAddVideo will be called to add a video
+		socket.on( 'getNextVideo', $.proxy( this.onGetNextVideo, this ) );
+
 	};
 	
 }
@@ -208,7 +230,7 @@ function WormTvModel( ) {
 	
 	this._users = [ ];
 	this._usersLookup = { };
-	this._currentUserClientId = '';
+	this._videos = [ ];
 	
 	//-----------------------------------------------------------------------------------------------
 	// public methods
@@ -288,6 +310,22 @@ function WormTvModel( ) {
 		}
 		
 		return user;
+		
+	};
+	
+	this.addVideo = function( videoId ) {
+		
+		console.log( 'WormTvModel.addVideo( ' + videoId +' )' );
+		
+		this._videos.push( videoId );
+		
+	};
+	
+	this.getNextVideo = function( ) {
+		
+		console.log( 'WormTvModel.getNextVideo( )' );
+		
+		return this._videos.pop( );
 		
 	};
 
