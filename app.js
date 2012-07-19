@@ -132,6 +132,7 @@ function WormTvApplication( ) {
 	this.initApp = function( ) {
 		
 		this._app = require( 'express' ).createServer( );
+		
 		this._app.listen( process.env.PORT || 8001 );
 		
 		this.initRoutes( );
@@ -213,7 +214,7 @@ function WormTvModel( ) {
 	// public methods
 	//-----------------------------------------------------------------------------------------------
 	
-	// clear all users including the cryptum user
+	// clear all users
 	this.clearAllUsers = function( ) {
 		
 		this._users = [ ];
@@ -243,7 +244,7 @@ function WormTvModel( ) {
 
 	this.getData = function( ) {
 
-		// return a list of user names, the current user's name and the current user's client ID in a single object
+		// return a list of user names
 		var data = {
 
 			usersNames: this.getUsersNames( )
