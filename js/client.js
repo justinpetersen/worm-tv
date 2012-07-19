@@ -1,16 +1,11 @@
-var client = new CryptumClient( );
+var client = new WormTvClient( );
 client.init( );
 
-function CryptumClient( ) {
+function WormTvClient( ) {
 
 	//-----------------------------------------------------------------------------------------------
 	// private static constants
 	//-----------------------------------------------------------------------------------------------
-
-	this.LOGIN_STATE = 0;
-	this.LOBBY_STATE = 1;
-	this.CRYPTUM_STATE = 2;
-	this.BACKDOOR_STATE = 3;
 	
 	//-----------------------------------------------------------------------------------------------
 	// private properties
@@ -25,7 +20,7 @@ function CryptumClient( ) {
 	
 	this.init = function( ) {
 		
-		this._model = new CryptumClientModel( );
+		this._model = new WormTvModel( );
 		
 		this.connect( );
 		
@@ -33,7 +28,7 @@ function CryptumClient( ) {
 	
 	this.facebookLogin = function( ) {
 		
-		console.log( 'CryptumClient.facebookLogin( )' );
+		console.log( 'WormTvClient.facebookLogin( )' );
 		
 		FB.login( $.proxy( this.onFacebookLoginHandler, this ) );
 		
@@ -41,7 +36,7 @@ function CryptumClient( ) {
 
 	this.login = function( userName ) {
 
-		console.log( 'CryptumClient.login( ' + userName + ' )' );
+		console.log( 'WormTvClient.login( ' + userName + ' )' );
 		
 		// if a userName was not provided by Facebook
 		if ( !userName ) {
@@ -61,18 +56,9 @@ function CryptumClient( ) {
 
 	};
 
-	this.enterCryptum = function( ) {
-
-		console.log( 'CryptumClient.enterCryptum( )' );
-		
-		// submit the client ID and user name to enter the cryptum
-		this._socket.emit( 'enterCryptum', this._model.getData( ) );
-
-	};
-
 	this.clearAllUsers = function( ) {
 
-		console.log( 'CryptumClient.clearAllUsers( )' );
+		console.log( 'WormTvClient.clearAllUsers( )' );
 		
 		this._socket.emit( 'clearAllUsers', this._model.getData( ) );
 
@@ -85,7 +71,7 @@ function CryptumClient( ) {
 	// called on the initial client connection
 	this.onInitConnectHandler = function( data ) {
 		
-		console.log('CryptumClient.onInitConnectHandler( )' );
+		console.log('WormTvClient.onInitConnectHandler( )' );
 		
 	};
 	
@@ -105,7 +91,7 @@ function CryptumClient( ) {
 	
 	this.onFacebookApiHandler = function( response ) {
 		
-		console.log('CryptumClient.onFacebookApiHandler( )' );
+		console.log('WormTvClient.onFacebookApiHandler( )' );
 		console.log( 'name: ' + response.name )
 		
 		this.login( response.name );
@@ -115,14 +101,12 @@ function CryptumClient( ) {
 	// called on the initial client connection
 	this.onConnectHandler = function( data ) {
 
-		console.log('CryptumClient.onConnectHandler( )' );
+		console.log('WormTvClient.onConnectHandler( )' );
 		console.log( 'clientId: ' + data.clientId );
 
 		// store this client ID for identifying future server calls
 		this._model.setClientId( data.clientId );
 		
-		// display the Facebook login button
-		this._model.setState( this.LOGIN_STATE );
 		this.updateView( );
 
 	};
@@ -130,10 +114,8 @@ function CryptumClient( ) {
 	// called whenever a new user enters the lobby or the cryptum
 	this.onStatusHandler = function( data ) {
 		
-		console.log('CryptumClient.onStatusHandler( )' );
+		console.log('WormTvClient.onStatusHandler( )' );
 		console.log( 'usersNames: ' + data.usersNames );
-		console.log( 'currentUserName: ' + data.currentUserName );
-		console.log( 'currentUserClientId: ' + data.currentUserClientId );
 		
 		this.setState( data );
 		
@@ -145,7 +127,7 @@ function CryptumClient( ) {
 
 	this.connect = function( ) {
 		
-		console.log( 'CryptumClient.connect( )' );
+		console.log( 'WormTvClient.connect( )' );
 		
 		if ( this._socket == null ) {
 			this._socket = io.connect( null, { 'auto connect': false } );
@@ -171,68 +153,9 @@ function CryptumClient( ) {
 
 	};
 	
-	this.setState = function( data ) {
-		
-		// set the state of the client view based on a user either entering the lobby or the cryptum
-		this._model.setUsersNames( data.usersNames );
-		this._model.setCurrentUserName( data.currentUserName );
-		
- 		// if this client ID matches the client ID of the user in the cryptum
-		if ( data.currentUserClientId == this._model.getClientId( ) ) {
-			// then enter the cryptum state
-			this._model.setState( this.CRYPTUM_STATE );
-		} else if ( data.usersNames.length > 0 && this._model.getUserName( ) != '' ) {
-			// if users are in the lobby, then enter the lobby
-			this._model.setState( this.LOBBY_STATE );
-		} else {		
-			// if the lobby and cryptum are both empty, then all users must have been cleared
-			this._model.setState( this.LOGIN_STATE );
-		}
-		
-		// render the view based on the state change
-		this.updateView( );
-		
-	};
-	
-	this.updateView = function( ) {
-		
-		$("#usersNames").val( this._model.getUsersNames().join( '\n' ) );
-		$("#currentUserName").val( this._model.getCurrentUserName() );
-		
-		switch ( this._model.getState( ) ) {
-			
-			case this.LOGIN_STATE:
-				$("#login").show( );
-				$("#lobby").hide( );
-				$("#cryptum").hide( );
-				break;
-				
-			case this.LOBBY_STATE:
-				$("#login").hide( );
-				$("#enterCryptum").show( );
-				$("#lobby").show( );
-				$("#cryptum").hide( );
-				break;
-				
-			case this.CRYPTUM_STATE:
-				$("#login").hide( );
-				$("#enterCryptum").hide( );
-				$("#lobby").show( );
-				$("#cryptum").show( );
-				break;
-				
-			case this.BACKDOOR_STATE:
-				$("#login").show( );
-				$("#lobby").hide( );
-				$("#cryptum").hide( );
-				break;
-		}
-		
-	};
-	
 }
 
-function CryptumClientModel( ) {
+function WormTvModel( ) {
 	
 	//-----------------------------------------------------------------------------------------------
 	// private properties
@@ -242,7 +165,6 @@ function CryptumClientModel( ) {
 	this._clientId = '';
 	this._userName = '';
 	this._usersNames = [ ];
-	this._currentUserName = '';
 	
 	//-----------------------------------------------------------------------------------------------
 	// public getters/setters
@@ -305,18 +227,6 @@ function CryptumClientModel( ) {
 	this.setUsersNames = function( usersNames ) {
 
 		this._usersNames = usersNames;
-
-	};
-
-	this.getCurrentUserName = function( ) {
-
-		return this._currentUserName;
-
-	};
-
-	this.setCurrentUserName = function( currentUserName ) {
-
-		this._currentUserName = currentUserName;
 
 	};
 	
