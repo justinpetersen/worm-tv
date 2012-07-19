@@ -13,6 +13,7 @@ function WormTvClient( ) {
 	
 	this._model = null;
 	this._socket = null;
+	this._player = null;
 	
 	//-----------------------------------------------------------------------------------------------
 	// public methods
@@ -32,47 +33,13 @@ function WormTvClient( ) {
 		
 		console.log( 'WormTvClient.initYouTubePlayer( )' );
 
-	      // 2. This code loads the IFrame Player API code asynchronously.
-	      var tag = document.createElement('script');
-	      tag.src = "//www.youtube.com/player_api";
-	      var firstScriptTag = document.getElementsByTagName('script')[0];
-	      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-	
-			console.log( 'tag: ' + tag );
-
-	      // 3. This function creates an <iframe> (and YouTube player)
-	      //    after the API code downloads.
-	      var player;
-	      function onYouTubePlayerAPIReady() {
-	        player = new YT.Player('player', {
-	          height: '390',
-	          width: '640',
-	          videoId: 'u1zgFlCw8Aw',
-	          events: {
-	            'onReady': onPlayerReady,
-	            'onStateChange': onPlayerStateChange
-	          }
-	        });
-	      }
-
-	      // 4. The API will call this function when the video player is ready.
-	      function onPlayerReady(event) {
-	        event.target.playVideo();
-	      }
-
-	      // 5. The API calls this function when the player's state changes.
-	      //    The function indicates that when playing a video (state=1),
-	      //    the player should play for six seconds and then stop.
-	      var done = false;
-	      function onPlayerStateChange(event) {
-	        if (event.data == YT.PlayerState.PLAYING && !done) {
-	          setTimeout(stopVideo, 6000);
-	          done = true;
-	        }
-	      }
-	      function stopVideo() {
-	        player.stopVideo();
-	      }
+		// This code loads the IFrame Player API code asynchronously.
+		var tag = document.createElement( 'script' );
+		tag.src = "//www.youtube.com/player_api";
+		var firstScriptTag = document.getElementsByTagName( 'script' )[ 0 ];
+		firstScriptTag.parentNode.insertBefore( tag, firstScriptTag );
+		
+		onYouTubePlayerAPIReady = $.proxy( this.onYouTubePlayerAPIReady, this );
 
 	};
 	
@@ -168,8 +135,17 @@ function WormTvClient( ) {
 		this.setState( data );
 		
 	};
-
-	this.onPlayerReady = function( ) {
+	
+	// This function creates an <iframe> (and YouTube player) after the API code downloads.
+	this.onYouTubePlayerAPIReady = function( ) {
+		
+		console.log( 'WormTvClient.onYouTubePlayerAPIReady()' );
+		
+		this.createYouTubePlayer( );
+		
+	};
+	
+	this.onPlayerReady = function( event ) {
 
 		console.log( 'WormTvClient.onPlayerReady( )' );
 		
@@ -177,9 +153,18 @@ function WormTvClient( ) {
 
 	};
 
-	this.onPlayerStateChange = function( ) {
+	this.onPlayerStateChange = function( event ) {
 
 		console.log( 'WormTvClient.onPlayerStateChange( )' );
+		
+		switch ( event.data ) {
+			
+			case YT.PlayerState.ENDED:
+				console.log( 'complete' );
+				this._player.loadVideoById( '8UVNT4wvIGY' );
+				break;
+			
+		}
 
 	};
 	
@@ -213,6 +198,23 @@ function WormTvClient( ) {
 		// onStatus will be called whenever a new user enters the lobby or the cryptum
 		this._socket.on( 'onStatus', $.proxy( this.onStatusHandler, this ) );
 
+	};
+	
+	this.createYouTubePlayer = function( ) {
+		
+		console.log( 'WormTvClient.createYouTubePlayer( )' );
+		
+		this._player = new YT.Player( 'player', {
+			height: '100%',
+			width: '100%',
+			videoId: 'Jg5wkZ-dJXA',
+			autoplay: '1',
+			events: {
+				'onReady': $.proxy( this.onPlayerReady, this ),
+				'onStateChange': $.proxy( this.onPlayerStateChange, this )
+			}
+		} );
+		
 	};
 	
 	this.setState = function( data ) {
