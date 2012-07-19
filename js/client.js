@@ -106,8 +106,6 @@ function WormTvClient( ) {
 
 		// store this client ID for identifying future server calls
 		this._model.setClientId( data.clientId );
-		
-		this.updateView( );
 
 	};
 	
@@ -151,6 +149,12 @@ function WormTvClient( ) {
 		// onStatus will be called whenever a new user enters the lobby or the cryptum
 		this._socket.on( 'onStatus', $.proxy( this.onStatusHandler, this ) );
 
+	};
+	
+	this.setState = function( data ) {
+		
+		// update state
+		
 	};
 	
 }
