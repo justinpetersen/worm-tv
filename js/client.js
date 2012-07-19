@@ -29,12 +29,16 @@ function WormTvClient( ) {
 	};
 	
 	this.initYouTubePlayer = function( ) {
+		
+		console.log( 'WormTvClient.initYouTubePlayer( )' );
 
 	      // 2. This code loads the IFrame Player API code asynchronously.
 	      var tag = document.createElement('script');
 	      tag.src = "//www.youtube.com/player_api";
 	      var firstScriptTag = document.getElementsByTagName('script')[0];
 	      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+	
+			console.log( 'tag: ' + tag );
 
 	      // 3. This function creates an <iframe> (and YouTube player)
 	      //    after the API code downloads.
